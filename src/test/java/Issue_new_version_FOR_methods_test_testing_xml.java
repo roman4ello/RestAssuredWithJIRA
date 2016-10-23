@@ -1,5 +1,6 @@
 import apis.JiraAPI;
 import com.jayway.restassured.http.ContentType;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import tools.JiraJSONTools;
 import tools.JiraOtherTools;
@@ -9,16 +10,21 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Vector;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 
-public class Issue_new_version {
+public class Issue_new_version_FOR_methods_test_testing_xml {
 
     //the Date for writting simple description
     private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private Date date = new Date();
+
+    //issueIDorKEYforDELETE - that will be delete
+    private  String issueIDorKEYforDELETE = "";
+
+    //issueIDorKEYforADDComment - Issue that should already exist
+    private  String issueIDorKEYforADDComment = ""; //example QAAUT-857
 
     //--------------------------------------------------------------------
 
@@ -31,7 +37,7 @@ public class Issue_new_version {
 
     //createIssue
     //after using this method wil be append CreatedKEY in file (issue's keys.txt)
-    @Test
+    @BeforeMethod
     public void createIssue() {
         // подготовка тестовых данных
         JiraJSONTools jiraJSONTools = new JiraJSONTools();
@@ -43,7 +49,8 @@ public class Issue_new_version {
 
         // проверка ответа от сервера
         try {
-            JiraOtherTools.getKEYofCreatedIssue(jiraAPI.response);
+            issueIDorKEYforADDComment = JiraOtherTools.getKEYofCreatedIssue(jiraAPI.response);
+            issueIDorKEYforDELETE = issueIDorKEYforADDComment;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,10 +62,8 @@ public class Issue_new_version {
 
     //--------------------------------------------------------------------
 
-    //issueIDorKEYforDELETE - that will be delete
-    private final String issueIDorKEYforDELETE = "QAAUT-857";
 
-    ///deleteIssue
+    //deleteIssue
     @Test
     public void deleteIssue() {
         //Delete() from Jira APi does not consist from any body
@@ -70,58 +75,58 @@ public class Issue_new_version {
         // проверка ответа от сервера
         assertEquals(jiraAPI.response.statusCode(), 204);
         assertTrue(jiraAPI.response.contentType().contains(ContentType.JSON.toString()));
+            System.out.println("Issue  - " + issueIDorKEYforDELETE + "  was successfully DELETED");
 
     }
 
     //deleteISSUES
     //
-    @Test
-    public void deleteIssues() throws IOException {
-        //Delete() from Jira APi does not consist from any body
 
-        // создание объекта
-        JiraAPI jiraAPI = new JiraAPI();
+//    @Test
+//    public void deleteIssues() throws IOException {
+//        //Delete() from Jira APi does not consist from any body
+//
+//        // создание объекта
+//        JiraAPI jiraAPI = new JiraAPI();
+//
+//        Vector<String> vectorIssueKeys =
+//                JiraOtherTools.readKeysOfIssuesInFile("issue's keys.txt");
+//
+//        for (String vectorIssueKey : vectorIssueKeys) {
+//            jiraAPI.deleteIssue(vectorIssueKey);
+//            // проверка ответа от сервера
+//            System.out.println("Issue  - " + vectorIssueKey + "  was successfully DELETED");
+//
+//        }
 
-        Vector<String> vectorIssueKeys =
-                JiraOtherTools.readKeysOfIssuesInFile("issue's keys.txt");
 
-        for (String vectorIssueKey : vectorIssueKeys) {
-            jiraAPI.deleteIssue(vectorIssueKey);
-            // проверка ответа от сервера
-            System.out.println("Issue  - " + vectorIssueKey + "  was successfully DELETED");
-
-        }
-
-
-    }
+//    }
 
     //--------------------------------------------------------------------
 
     //wordsForAddComment - words wich will be add to comments of issue
     private final String wordsForAddComment = "Default commentary was added/created in:" + dateFormat.format(date);
 
-    //issueIDorKEYforADDComment - Issue that should already exist
-    private final String issueIDorKEYforADDComment = "QAAUT-857";
+
 
     //addComment
-    @Test
-    public void createAddComment() {
-
-        // подготовка тестовых данных
-        JiraJSONTools jiraJSONtools = new JiraJSONTools();
-        String body = jiraJSONtools.generateJSONForAddComment(wordsForAddComment);
-
-        // создание объекта
-        JiraAPI jiraAPI = new JiraAPI();
-        jiraAPI.addComment(body, issueIDorKEYforADDComment);
-
-        // проверка ответа от сервера
-        assertEquals(jiraAPI.response.statusCode(), 201);
-        assertTrue(jiraAPI.response.contentType().contains(ContentType.JSON.toString()));
-    }
+//    @Test
+//    public void createAddComment() {
+//
+//        // подготовка тестовых данных
+//        JiraJSONTools jiraJSONtools = new JiraJSONTools();
+//        String body = jiraJSONtools.generateJSONForAddComment(wordsForAddComment);
+//
+//        // создание объекта
+//        JiraAPI jiraAPI = new JiraAPI();
+//        jiraAPI.addComment(body, issueIDorKEYforADDComment);
+//
+//        // проверка ответа от сервера
+//        assertEquals(jiraAPI.response.statusCode(), 201);
+//        assertTrue(jiraAPI.response.contentType().contains(ContentType.JSON.toString()));
+//    }
 
     //--------------------------------------------------------------------
-
 
 
 

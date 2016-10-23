@@ -1,0 +1,7 @@
+<suite name="Independent test Suite" >
+    <test name="Independent test">
+        <classes>
+            <class name="Issue_new_version_FOR_independent_test_testing_xml" />
+        </classes>
+    </test>
+</suite>

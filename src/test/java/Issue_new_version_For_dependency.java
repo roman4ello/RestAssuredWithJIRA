@@ -14,7 +14,7 @@ import java.util.Vector;
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 
-public class Issue_new_version {
+public class Issue_new_version_For_dependency {
 
     //the Date for writting simple description
     private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -25,6 +25,12 @@ public class Issue_new_version {
     //codeOfIssueType  - one of IssueType enums
     private final IssueTypes codeOfIssueType = IssueTypes.TASK_CODE;
     private final Integer issueType = codeOfIssueType.getCode();
+
+    //issueIDorKEYforDELETE - that will be delete
+    private   String issueIDorKEYforDELETE = "";
+
+    //issueIDorKEYforADDComment - Issue that should already exist
+    private   String issueIDorKEYforADDComment = "";
 
     //Text for summary
     private final String summary_words = "This is " + codeOfIssueType.toString() + " This code was created in: " + dateFormat.format(date);
@@ -43,7 +49,8 @@ public class Issue_new_version {
 
         // проверка ответа от сервера
         try {
-            JiraOtherTools.getKEYofCreatedIssue(jiraAPI.response);
+             issueIDorKEYforADDComment = JiraOtherTools.getKEYofCreatedIssue(jiraAPI.response);
+            issueIDorKEYforDELETE = issueIDorKEYforADDComment;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,11 +62,9 @@ public class Issue_new_version {
 
     //--------------------------------------------------------------------
 
-    //issueIDorKEYforDELETE - that will be delete
-    private final String issueIDorKEYforDELETE = "QAAUT-857";
 
     ///deleteIssue
-    @Test
+    @Test(dependsOnMethods = {"createAddComment"})
     public void deleteIssue() {
         //Delete() from Jira APi does not consist from any body
 
@@ -100,11 +105,9 @@ public class Issue_new_version {
     //wordsForAddComment - words wich will be add to comments of issue
     private final String wordsForAddComment = "Default commentary was added/created in:" + dateFormat.format(date);
 
-    //issueIDorKEYforADDComment - Issue that should already exist
-    private final String issueIDorKEYforADDComment = "QAAUT-857";
 
     //addComment
-    @Test
+    @Test(dependsOnMethods = {"createIssue"})
     public void createAddComment() {
 
         // подготовка тестовых данных

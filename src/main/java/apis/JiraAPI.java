@@ -16,15 +16,15 @@ public class JiraAPI  extends MyRequestSender {
                 .post(ApiUrlPaths.ISSUE.getUrl());
     }
 
-
-    public  void deleteIssue(String issueIDorKEYforDELETE){
-        myRequestSender
-                    .delete(ApiUrlPaths.ISSUE.getUrl()+"/"+  issueIDorKEYforDELETE);
-    }
-
-    public  void addComment(String body, String issueIDorKEYforADDComment){
+    public  void deleteIssue(String body){
         myRequestSender
                 .createRequest(body)
-                .post(ApiUrlPaths.ISSUE.getUrl()+"/"+  issueIDorKEYforADDComment+"/comment");
+                .delete(ApiUrlPaths.ISSUE.getUrl());
+    }
+
+    public  void addComment(String body, String issueIDorKEY){
+        myRequestSender
+                .createRequest(body)
+                .post(ApiUrlPaths.ISSUE.getUrl()+"/"+  issueIDorKEY+"/comment");
     }
 }//class 

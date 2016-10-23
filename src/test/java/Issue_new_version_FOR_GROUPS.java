@@ -14,7 +14,7 @@ import java.util.Vector;
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 
-public class Issue_new_version {
+public class Issue_new_version_FOR_GROUPS {
 
     //the Date for writting simple description
     private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -31,8 +31,8 @@ public class Issue_new_version {
 
     //createIssue
     //after using this method wil be append CreatedKEY in file (issue's keys.txt)
-    @Test
-    public void createIssue() {
+    @Test(groups = "before" )
+    public void createIssue1() {
         // подготовка тестовых данных
         JiraJSONTools jiraJSONTools = new JiraJSONTools();
         String login_body = jiraJSONTools.generateJSONForCreateIssue(summary_words, issueType);
@@ -52,7 +52,27 @@ public class Issue_new_version {
         assertTrue(jiraAPI.response.contentType().contains(ContentType.JSON.toString()));
 
     }
+    @Test(groups = {"before"} )
+    public void createIssue2() {
+        // подготовка тестовых данных
+        JiraJSONTools jiraJSONTools = new JiraJSONTools();
+        String login_body = jiraJSONTools.generateJSONForCreateIssue(summary_words, issueType);
 
+        // создание объекта
+        JiraAPI jiraAPI = new JiraAPI();
+        jiraAPI.createIssue(login_body);
+
+        // проверка ответа от сервера
+        try {
+            JiraOtherTools.getKEYofCreatedIssue(jiraAPI.response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(jiraAPI.response.statusCode(), 201);
+        assertTrue(jiraAPI.response.contentType().contains(ContentType.JSON.toString()));
+
+    }
     //--------------------------------------------------------------------
 
     //issueIDorKEYforDELETE - that will be delete
