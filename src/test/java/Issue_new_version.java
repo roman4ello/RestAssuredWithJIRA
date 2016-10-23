@@ -1,4 +1,5 @@
 import apis.JiraAPI;
+import apis.MyRequestSender;
 import com.jayway.restassured.http.ContentType;
 import org.testng.annotations.Test;
 import tools.JiraJSONTools;
@@ -22,6 +23,13 @@ public class Issue_new_version {
 
     //--------------------------------------------------------------------
 
+    @Test(groups = {"loginGroup"})
+    public void login(){
+        new MyRequestSender().login();
+    }
+
+
+
     //codeOfIssueType  - one of IssueType enums
     private final IssueTypes codeOfIssueType = IssueTypes.TASK_CODE;
     private final Integer issueType = codeOfIssueType.getCode();
@@ -31,7 +39,7 @@ public class Issue_new_version {
 
     //createIssue
     //after using this method wil be append CreatedKEY in file (issue's keys.txt)
-    @Test
+    @Test(dependsOnGroups = {"loginGroup"})
     public void createIssue() {
         // подготовка тестовых данных
         JiraJSONTools jiraJSONTools = new JiraJSONTools();
@@ -56,10 +64,10 @@ public class Issue_new_version {
     //--------------------------------------------------------------------
 
     //issueIDorKEYforDELETE - that will be delete
-    private final String issueIDorKEYforDELETE = "QAAUT-857";
+    private final String issueIDorKEYforDELETE = "QAAUT-952";
 
     ///deleteIssue
-    @Test
+    @Test(dependsOnGroups = {"loginGroup"})
     public void deleteIssue() {
         //Delete() from Jira APi does not consist from any body
 
@@ -75,7 +83,7 @@ public class Issue_new_version {
 
     //deleteISSUES
     //
-    @Test
+    @Test(dependsOnGroups = {"loginGroup"})
     public void deleteIssues() throws IOException {
         //Delete() from Jira APi does not consist from any body
 
@@ -104,7 +112,7 @@ public class Issue_new_version {
     private final String issueIDorKEYforADDComment = "QAAUT-857";
 
     //addComment
-    @Test
+    @Test(dependsOnGroups = {"loginGroup"})
     public void createAddComment() {
 
         // подготовка тестовых данных

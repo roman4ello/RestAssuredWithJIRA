@@ -22,10 +22,10 @@ public class MyRequestSender {
 
 
     public MyRequestSender() {
-        authenticate();
+        login();
     }
 
-    public void authenticate() {
+    public void login() {
         RestAssured.baseURI = "http://soft.it-hillel.com.ua:8080";
 
         JiraJSONTools jiraJSONInstrument = new JiraJSONTools();
